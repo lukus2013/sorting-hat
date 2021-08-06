@@ -30,17 +30,41 @@ const sortingHatCard = () => {
      renderToDom("#studentForm", domstring);
  }
 
+ const houseColumns = () => {
+
+    renderToDom("#firstYearsLabel", "First Years");
+    renderToDom("#voldysArmyLabel", "Voldy's Army");
+}
+
  const handleFormSubmit = (event) => {
     event.preventDefault();
+    if ( document.querySelector("#name").value === "") {
+        alert("You must tell me your name.")
+        return ;
+    }
     if (event.target.id === "name-btn"){
     const newStudent = {
         name: document.querySelector("#name").value,
         house: yourHouse()
     };
-
+    houseColumns();
     firstYears.push(newStudent)
-    students(firstYears);
+    renderStudents(firstYears);
+    const textField = document.querySelector("#name");
+    textField.value= "";
     }
+}
+
+const expelStudent = (event) => {
+    const expelBtnId = event.target.id;
+    const targetType = event.target.type;
+   if (targetType === "button") {
+       var expelledStudent = firstYears.splice(expelBtnId, 1)[0];
+       console.log(expelStudent);
+       voldysArmy.push(expelledStudent);
+       renderVoldysArmy(voldysArmy);
+       renderStudents(firstYears);
+   }
 }
 
 const yourHouse = () => {
@@ -49,35 +73,34 @@ const yourHouse = () => {
     ]
 }
 
-const students = (firstYears) => {
-    const domstring=`
+const renderStudents = (firstYears) => {
+    let domstring="";
+    firstYears.forEach((student, i) =>{
+        domstring += `
         <div class="card" style="width: 18rem;">
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">An item</li>
-                <li class="list-group-item">A second item</li>
+                <li class="list-group-item">${student.name}</li>
+                <li class="list-group-item">${student.house}</li>
             </ul>
-        </div>
-    `;
+            <button type="button" id="${i}" class="btn btn-primary">Expel</button>
+        </div>`
+    });
 
-    renderToDom()
+    renderToDom("#student-card", domstring);
 }
 
-const houseColumns = () => {
-    const domstring=`
-    <div class="container">
-        <div id"housing-col" class="row align-items-start">
-            <div class="col">
-            First Years
-            </div>
-            <div class="col">
-            Voldy's Army
-            </div>
-        </div>
-    </div>`;
-
-    renderToDom("#house-columns", domstring);
+const renderVoldysArmy = (voldysArmy) => {
+    let domstring="";
+    voldysArmy.forEach((soldier, i) =>{
+        domstring += `
+        <div class="card" style="width: 18rem;">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">${soldier.name}</li>
+            </ul>
+        </div>`
+    });
+    renderToDom("#varmy", domstring);
 }
-
 
 const renderToDom = (divId, textToPrint) => {
     const selectedDiv = document.querySelector(divId);
@@ -87,12 +110,12 @@ const renderToDom = (divId, textToPrint) => {
 const buttonEvents = () => {
     document.querySelector("#sort-btn").addEventListener("click", studentForm);
     document.querySelector("#studentForm").addEventListener("click", handleFormSubmit);
+    document.querySelector("#student-card").addEventListener("click", expelStudent);
 };
 
 const init = () => {
     sortingHatCard();
     buttonEvents();
-    // students(firstYears);
 }
 
 init();
