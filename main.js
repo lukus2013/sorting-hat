@@ -39,7 +39,8 @@ const sortingHatCard = () => {
  const handleFormSubmit = (event) => {
     event.preventDefault();
     if ( document.querySelector("#name").value === "") {
-        return;
+        alert("You must tell me your name.")
+        return ;
     }
     if (event.target.id === "name-btn"){
     const newStudent = {
